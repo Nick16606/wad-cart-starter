@@ -34,35 +34,59 @@ test('free shipping is decided on the subtotal before VAT', () => {
 })
 
 test('qty 0 throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100, qty: 0 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100, qty: 0 }], options),
+    RangeError,
+  )
 })
 
 test('qty -1 throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100, qty: -1 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100, qty: -1 }], options),
+    RangeError,
+  )
 })
 
 test('qty 1.5 throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100, qty: 1.5 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100, qty: 1.5 }], options),
+    RangeError,
+  )
 })
 
 test('qty "2" (string) throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100, qty: '2' }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100, qty: '2' }], options),
+    RangeError,
+  )
 })
 
 test('qty NaN throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100, qty: NaN }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100, qty: NaN }], options),
+    RangeError,
+  )
 })
 
 test('qty undefined throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: 100 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: 100 }], options),
+    RangeError,
+  )
 })
 
 test('price -1 throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: -1, qty: 1 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: -1, qty: 1 }], options),
+    RangeError,
+  )
 })
 
 test('price NaN throws RangeError', () => {
-  assert.throws(() => cartTotal([{ name: 'A', price: NaN, qty: 1 }], options), RangeError)
+  assert.throws(
+    () => cartTotal([{ name: 'A', price: NaN, qty: 1 }], options),
+    RangeError,
+  )
 })
 
 test('price 0 is valid', () => {
@@ -74,7 +98,10 @@ test('price 0 is valid', () => {
 test('a half dong rounds up with Math.round', () => {
   const items = [{ name: 'A', price: 100, qty: 1 }]
   // 100 + 12.5 VAT, free shipping (threshold 100) = 112.5 -> 113
-  assert.equal(cartTotal(items, { vatRate: 0.125, freeShipFrom: 100, shipFee: 30000 }), 113)
+  assert.equal(
+    cartTotal(items, { vatRate: 0.125, freeShipFrom: 100, shipFee: 30000 }),
+    113,
+  )
 })
 
 test('rounds once at the end, not per line', () => {
@@ -84,12 +111,19 @@ test('rounds once at the end, not per line', () => {
     { name: 'C', price: 1, qty: 1 },
   ]
   // 3 + 1.2 VAT = 4.2 -> 4. Rounding each line's 1.4 first would give 3.
-  assert.equal(cartTotal(items, { vatRate: 0.4, freeShipFrom: 0, shipFee: 30000 }), 4)
+  assert.equal(
+    cartTotal(items, { vatRate: 0.4, freeShipFrom: 0, shipFee: 30000 }),
+    4,
+  )
 })
 
-test('returns a Number that is an integer', () => {
-  const items = [{ name: 'A', price: 333, qty: 3 }]
-  const result = cartTotal(items, { vatRate: 0.07, freeShipFrom: 0, shipFee: 0 })
-  assert.equal(typeof result, 'number')
+test('returns a number', () => {
+  const items = [{ name: 'A', price: 1000, qty: 1 }]
+  assert.equal(typeof cartTotal(items, options), 'number')
+})
+
+test('returns a whole number of dong', () => {
+  const items = [{ name: 'A', price: 10001, qty: 1 }]
+  const result = cartTotal(items, { vatRate: 0.1, freeShipFrom: 0, shipFee: 0 })
   assert.ok(Number.isInteger(result))
 })
